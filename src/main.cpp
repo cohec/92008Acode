@@ -10,7 +10,7 @@
 // Chassis constructor
 ez::Drive chassis(
     // These are your drive motors, the first motor is used for sensing!
-    {-1, -2, 3},     // Left Chassis Ports (negative port will reverse it!)
+    {1, 2, -3},     // Left Chassis Ports (negative port will reverse it!)
     {-10, -9, 8},  // Right Chassis Ports (negative port will reverse it!)
     //intake motor ports
     
@@ -34,8 +34,8 @@ pros::Controller controller(pros::E_CONTROLLER_MASTER);
 //  - you should get positive values on the encoders going FORWARD and RIGHT
 // - `2.00` is the wheel diameter
 // - `4.0` is the distance from the center of the wheel to the center of the robot
-ez::tracking_wheel horiz_tracker(5, 2.00, 1.75);  // This tracking wheel is perpendicular to the drive wheels
-ez::tracking_wheel vert_tracker(7, 2.00, 1.25);   // This tracking wheel is parallel to the drive wheels
+//ez::tracking_wheel horiz_tracker(5, 2.00, 1.75);  // This tracking wheel is perpendicular to the drive wheels
+//ez::tracking_wheel vert_tracker(7, 2.00, 1.25);   // This tracking wheel is parallel to the drive wheels
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
@@ -67,8 +67,8 @@ void initialize() {
   default_constants();
 
   // These are already defaulted to these buttons, but you can change the left/right curve buttons here!
-  chassis.opcontrol_curve_buttons_left_set(pros::E_CONTROLLER_DIGITAL_LEFT, pros::E_CONTROLLER_DIGITAL_RIGHT);  // If using tank, only the left side is used.
-  chassis.opcontrol_curve_buttons_right_set(pros::E_CONTROLLER_DIGITAL_Y, pros::E_CONTROLLER_DIGITAL_A);
+  //chassis.opcontrol_curve_buttons_left_set(pros::E_CONTROLLER_DIGITAL_LEFT, pros::E_CONTROLLER_DIGITAL_RIGHT);  // If using tank, only the left side is used.
+  //chassis.opcontrol_curve_buttons_right_set(pros::E_CONTROLLER_DIGITAL_Y, pros::E_CONTROLLER_DIGITAL_A);
 
   // Autonomous Selector using LLEMU
   ez::as::auton_selector.autons_add({
