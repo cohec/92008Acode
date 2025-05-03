@@ -1,6 +1,7 @@
 #include "main.h"
+#include "pros/misc.h"
+#include "pros/motors.h"
 #include "pros/motors.hpp"
-#include "pros/controller.hpp"
 
 /////
 // For installation, upgrading, documentations, and tutorials, check out our website!
@@ -10,21 +11,14 @@
 // Chassis constructor
 ez::Drive chassis(
     // These are your drive motors, the first motor is used for sensing!
-    {1, 2, -3},     // Left Chassis Ports (negative port will reverse it!)
-    {-10, -9, 8},  // Right Chassis Ports (negative port will reverse it!)
+    {-10 , -9, 8},     // Left Chassis Ports (negative port will reverse it!)
+    {20, 19, -18},  // Right Chassis Ports (negative port will reverse it!)
     //intake motor ports
     
 
-    6,      // IMU Port
+    17,      // IMU Port
     2.75,  // Wheel Diameter (Remember, 4" wheels without screw holes are actually 4.125!)
     600);   // Wheel RPM = cartridge * (motor gear / wheel gear)
-
-
-
-pros::Motor intakeMotor(7, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_DEGREES);
-
-pros::Controller controller(pros::E_CONTROLLER_MASTER);
-
 
 
 
@@ -34,8 +28,8 @@ pros::Controller controller(pros::E_CONTROLLER_MASTER);
 //  - you should get positive values on the encoders going FORWARD and RIGHT
 // - `2.00` is the wheel diameter
 // - `4.0` is the distance from the center of the wheel to the center of the robot
-//ez::tracking_wheel horiz_tracker(5, 2.00, 1.75);  // This tracking wheel is perpendicular to the drive wheels
-//ez::tracking_wheel vert_tracker(7, 2.00, 1.25);   // This tracking wheel is parallel to the drive wheels
+ez::tracking_wheel horiz_tracker(16, 2.00, 2);  // This tracking wheel is perpendicular to the drive wheels
+ez::tracking_wheel vert_tracker(7, 2.00, 1.25);   // This tracking wheel is parallel to the drive wheels
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
@@ -60,8 +54,8 @@ void initialize() {
 
   // Configure your chassis controls
   chassis.opcontrol_curve_buttons_toggle(true);   // Enables modifying the controller curve with buttons on the joysticks
-  chassis.opcontrol_drive_activebrake_set(2.0);   // Sets the active brake kP. We recommend ~2.  0 will disable.
-  chassis.opcontrol_curve_default_set(0.0, 0.0);  // Defaults for curve. If using tank, only the first parameter is used. (Comment this line out if you have an SD card!)
+  chassis.opcontrol_drive_activebrake_set(1.0);   // Sets the active brake kP. We recommend ~2.  0 will disable.
+  chassis.opcontrol_curve_default_set(1.0, 2.0);  // Defaults for curve. If using tank, only the first parameter is used. (Comment this line out if you have an SD card!)
 
   // Set the drive to your own constants from autons.cpp!
   default_constants();
@@ -132,7 +126,7 @@ void autonomous() {
   chassis.drive_imu_reset();                  // Reset gyro position to 0
   chassis.drive_sensor_reset();               // Reset drive sensors to 0
   chassis.odom_xyt_set(0_in, 0_in, 0_deg);    // Set the current position, you can start at a specific position with this
-  chassis.drive_brake_set(MOTOR_BRAKE_HOLD);  // Set motors to hold.  This helps autonomous consistency
+  chassis.drive_brake_set(pros::E_MOTOR_BRAKE_HOLD);  // Set motors to hold.  This helps autonomous consistency
 
   /*
   Odometry and Pure Pursuit are not magic
@@ -219,11 +213,11 @@ void ez_template_extras() {
     //  When enabled:
     //  * use A and Y to increment / decrement the constants
     //  * use the arrow keys to navigate the constants
-    if (master.get_digital_new_press(DIGITAL_X))
+    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X))
       chassis.pid_tuner_toggle();
 
     // Trigger the selected autonomous routine
-    if (master.get_digital(DIGITAL_B) && master.get_digital(DIGITAL_DOWN)) {
+    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_B) && master.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)) {
       pros::motor_brake_mode_e_t preference = chassis.drive_brake_get();
       autonomous();
       chassis.drive_brake_set(preference);
@@ -255,7 +249,7 @@ void ez_template_extras() {
  */
 void opcontrol() {
   // This is preference to what you like to drive on
-  chassis.drive_brake_set(MOTOR_BRAKE_COAST);
+  chassis.drive_brake_set(pros::E_MOTOR_BRAKE_COAST);
 
   while (true) {
     // Gives you some extras to make EZ-Template ezier
